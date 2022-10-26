@@ -66,33 +66,6 @@ services:
     depends_on:
       - subscriber1
     network_mode: "service:subscriber1" # Attach the nodeapp-dapr service to the nodeapp network namespace
-  subscriber2:
-    image: localhost/subscriber2:1.0.0
-    ports:
-      - "5002:6002"
-      - "50002:60002" # Dapr instances communicate over gRPC so we need to expose the gRPC port
-      - "4602:3602"
-    depends_on:
-      - redis
-      - placement
-    networks:
-      - hello-dapr
-  subscriber2-dapr:
-    image: "daprio/daprd:latest"
-    volumes:
-      - "./components:/components"
-    command: [
-        "./daprd",
-        "--app-id", "subscriber1",
-        "--app-port", "5002",
-        "--placement-host-address", "placement:50006", # Dapr's placement service can be reach via the docker DNS entry
-        "--dapr-grpc-port", "50002",
-        "--dapr-http-port", "4602",
-        "--components-path", "./components"
-    ]
-    depends_on:
-      - subscriber2
-    network_mode: "service:subscriber2" # Attach the nodeapp-dapr service to the nodeapp network namespace
   ############################
   # Dapr placement service
   ############################

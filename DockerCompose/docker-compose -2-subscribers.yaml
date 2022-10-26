@@ -83,7 +83,7 @@ services:
       - "./components:/components"
     command: [
         "./daprd",
-        "--app-id", "subscriber1",
+        "--app-id", "subscriber2",
         "--app-port", "5002",
         "--placement-host-address", "placement:50006", # Dapr's placement service can be reach via the docker DNS entry
         "--dapr-grpc-port", "50002",
