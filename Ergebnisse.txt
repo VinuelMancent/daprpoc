@@ -1,3 +1,12 @@
 Mit Dapr:
-
+	1 sub:
+		Nachrichten kommen schnell an
+		Nachrichten werden nach neustart nachgeladen (aus der queue)
+	2 sub:
+		Nachrichten werden round robin geloadbalanced
 Ohne Dapr:
+	1 sub:
+		Nachrichten kommen schnell an
+		Nachrichten werden nach neustart nachgeladen (aus der queue)
+	2 sub:
+		Nachrichten werden round robin geloadbalanced
