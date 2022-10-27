@@ -10,7 +10,7 @@ public class SenderController : ControllerBase
 {
 
     [HttpPost("receiveMessage")]
-    public async Task<ActionResult> ReceiveInvocation([FromBody]string message)
+    public async Task<ActionResult> ReceiveInvocation([FromHeader]string message)
     {
         Console.WriteLine($"Message: {message}");
         return Ok();
