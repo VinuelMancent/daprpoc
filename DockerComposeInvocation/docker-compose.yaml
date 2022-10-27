@@ -1,0 +1,81 @@
+version: '3'
+services:  
+  invocation1:
+    image: localhost/invocation1:1.0.0
+    ports:
+      - "6004:6004"
+      - "3604:3604"
+      - "60004:60004"
+    networks:
+      - hello-dapr  
+  invocation1-dapr:
+    image: "daprio/daprd:latest"
+    volumes:
+      - "./components:/components"
+    command: [
+        "./daprd",
+        "--app-id", "invocation1",
+        "--app-port", "6004",
+        "--placement-host-address", "placement:50006", # Dapr's placement service can be reach via the docker DNS entry
+        "--dapr-grpc-port", "60004",
+        "--dapr-http-port", "3604",
+        "--components-path", "./components"
+    ]
+    depends_on:
+      - invocation1
+    network_mode: "service:invocation1" # Attach the nodeapp-dapr service to the nodeapp network namespace
+  invocation2:
+    image: localhost/invocation2:1.0.0
+    ports:
+      - "6005:6005"
+      - "3605:3605"
+      - "60005:60005"
+    networks:
+      - hello-dapr  
+  invocation2-dapr:
+    image: "daprio/daprd:latest"
+    volumes:
+      - "./components:/components"
+    command: [
+        "./daprd",
+        "--app-id", "invocation2",
+        "--app-port", "6005",
+        "--placement-host-address", "placement:50006", # Dapr's placement service can be reach via the docker DNS entry
+        "--dapr-grpc-port", "60005",
+        "--dapr-http-port", "3605",
+        "--components-path", "./components"
+    ]
+    depends_on:
+      - invocation2
+    network_mode: "service:invocation2" # Attach the nodeapp-dapr service to the nodeapp network namespace
+  ############################
+  # Dapr placement service
+  ############################
+  placement:
+    image: "daprio/dapr"
+    command: [ "./placement", "-port", "50006" ]
+    ports:
+      - "50006:50006"
+    networks:
+      - hello-dapr
+  ############################
+  # Redis state store
+  ############################
+  redis:
+    image: "redis:6"
+    ports:
+      - "6379:6379"
+    hostname: redis
+    networks:
+      - hello-dapr
+  busybox:
+    image: "busybox:latest"
+    ports:
+      - "80:80"
+      - "443:443"
+    hostname: busybox
+    tty: true
+    networks:
+      - hello-dapr
+networks:
+  hello-dapr:

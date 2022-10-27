@@ -1,4 +1,5 @@
-﻿using Dapr.Client;
+﻿using System.ComponentModel.DataAnnotations;
+using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InvocationService1.Controllers;
@@ -9,7 +10,7 @@ public class SenderController : ControllerBase
 {
 
     [HttpPost("sendMessage")]
-    public async Task<ActionResult> SendInvocation([FromHeader] string appId, [FromHeader] string methodName)
+    public async Task<ActionResult> SendInvocation([FromHeader][Required] string appId, [FromHeader][Required] string methodName)
     {
         using var client = new DaprClientBuilder().Build();
         CancellationTokenSource source = new CancellationTokenSource();
